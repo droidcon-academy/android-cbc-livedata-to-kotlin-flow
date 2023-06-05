@@ -1,2 +1,2 @@
 # Study materials and source code for **Droidcon Academy** course 
-> # Converting LiveData to Kotlin Flow with Tests in Android 
+> # Migrating LiveData to Kotlin Flow with Tests in Android 
