@@ -12,13 +12,11 @@ fun MainScreen(
     viewModel: MainViewModel,
     shareText: (String) -> Unit
 ) {
-    val password by viewModel.password.collectAsStateWithLifecycle()
-    val previousPasswords by viewModel.previousPasswords.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val loading by viewModel.loading.collectAsStateWithLifecycle()
     PasswordFetch(
         modifier = modifier,
-        password = password,
-        previousPasswords = previousPasswords,
+        uiState = uiState,
         loading = loading,
         shareText = shareText,
         onClick = viewModel::fetchPassword

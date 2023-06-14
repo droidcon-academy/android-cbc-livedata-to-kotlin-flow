@@ -6,6 +6,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -32,32 +34,39 @@ class MainViewModelTest {
         viewModel = MainViewModel(passwordRepository)
     }
 
-    // TODO fix the tests to work with a UiState from the ViewModel
-
     @Test
     fun `fetchPassword should fetch the first password`() = runTest {
-        assertEquals(viewModel.password.value, "")
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.uiState.collect {}
+        }
+        assertEquals(viewModel.uiState.value.password, "")
         viewModel.fetchPassword()
         advanceUntilIdle()
-        assertEquals(viewModel.password.value, "Password123")
+        assertEquals("Password123", viewModel.uiState.value.password)
     }
 
     @Test
     fun `fetchPassword twice should fetch the second password`() = runTest {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.uiState.collect {}
+        }
         viewModel.fetchPassword()
         viewModel.fetchPassword()
         advanceUntilIdle()
-        assertEquals(viewModel.password.value, "Password1234")
+        assertEquals("Password1234", viewModel.uiState.value.password)
     }
 
     @Test
     fun `previousPasswords should be the same as history in repository`() = runTest {
-        assertEquals(viewModel.previousPasswords.value, passwordList)
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            viewModel.uiState.collect {}
+        }
+        assertEquals(passwordList, viewModel.uiState.value.history)
     }
 
     @Test
     fun `error should contain errorMessage`() = runTest {
-        assertEquals(viewModel.error.value, "Oops!")
+        assertEquals("Oops!", viewModel.error.value)
     }
 
 }
