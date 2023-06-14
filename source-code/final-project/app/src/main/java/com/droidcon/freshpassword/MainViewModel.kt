@@ -21,8 +21,17 @@ class MainViewModel(private val passwordRepository: PasswordRepository = Passwor
 
     val previousPasswords = passwordRepository.history
 
+//   TODO build a UiState that is a combination of the flows from the repository with the combine flow operator
+//    val uiState: StateFlow<UiState> = combine(password, history) {
+//
+//
+//
+//    }
+
     val error = passwordRepository.error
 
     private val _loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val loading = _loading.asStateFlow()
 }
+
+data class UiState(val password: String, val history: List<String>)

@@ -32,6 +32,8 @@ class MainViewModelTest {
         viewModel = MainViewModel(passwordRepository)
     }
 
+    // TODO fix the tests to work with a UiState from the ViewModel
+
     @Test
     fun `fetchPassword should fetch the first password`() = runTest {
         assertEquals(viewModel.password.value, "")
