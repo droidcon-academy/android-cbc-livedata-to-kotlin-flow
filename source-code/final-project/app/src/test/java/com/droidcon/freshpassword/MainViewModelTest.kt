@@ -10,9 +10,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.Before
 import kotlin.test.assertEquals
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -32,6 +32,15 @@ class MainViewModelTest {
             errorMessage = "Oops!"
         )
         viewModel = MainViewModel(passwordRepository)
+    }
+
+    @Test
+    fun `fetchPassword should set loading and then clear loading`() = runTest {
+        assertEquals(false, viewModel.loading.value)
+        viewModel.fetchPassword()
+        assertEquals(true, viewModel.loading.value)
+        advanceUntilIdle()
+        assertEquals(false, viewModel.loading.value)
     }
 
     @Test

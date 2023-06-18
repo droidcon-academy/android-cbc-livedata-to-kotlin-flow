@@ -13,7 +13,7 @@ fun MainScreen(
     shareText: (String) -> Unit
 ) {
     val password by viewModel.password.observeAsState()
-    val previousPasswords by viewModel.previousPasswords.observeAsState()
+    val previousPasswords by viewModel.history.observeAsState()
     val loading by viewModel.loading.observeAsState()
     PasswordFetch(
         modifier = modifier,

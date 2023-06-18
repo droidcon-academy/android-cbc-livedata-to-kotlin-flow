@@ -38,7 +38,7 @@ class PasswordRepositoryTest {
     fun `refreshPassword should not update the history on the first call`() = runTest {
         val history = repository.history
         repository.refreshPassword() // gets the first password
-        assertContentEquals(history.value, emptyList())
+        assertContentEquals(emptyList(), history.value)
     }
 
     @Test
@@ -87,7 +87,6 @@ class PasswordRepositoryTest {
 }
 
 class FakePasswordSource(private val password: String) : PasswordSource {
-    //    override suspend fun getPassword(): Flow<String> = flowOf(password)
     override suspend fun getPassword(): String {
         delay(1000)
         return password

@@ -14,8 +14,8 @@ import kotlin.test.assertEquals
 @OptIn(ExperimentalCoroutinesApi::class)
 class PasswordRepositoryTest {
 
-    private  lateinit var fakePasswordSource:PasswordSource
-    private  lateinit var repository:PasswordRepositoryImpl
+    private lateinit var fakePasswordSource: PasswordSource
+    private lateinit var repository: PasswordRepositoryImpl
 
     @Before
     fun setup() {
@@ -69,14 +69,14 @@ class PasswordRepositoryTest {
 
     @Test
     fun `updateHistory should limit the list to three`() {
-        val history = repository.updateHistory("Zombie", listOf("Unicorn", "Password123", "Password1234"))
+        val history =
+            repository.updateHistory("Zombie", listOf("Unicorn", "Password123", "Password1234"))
         assertEquals(listOf("Zombie", "Unicorn", "Password123"), history)
 
     }
 }
 
 class FakePasswordSource(private val password: String) : PasswordSource {
-    //    override suspend fun getPassword(): Flow<String> = flowOf(password)
     override suspend fun getPassword(): Flow<String> = flow {
         delay(1000)
         emit(password)

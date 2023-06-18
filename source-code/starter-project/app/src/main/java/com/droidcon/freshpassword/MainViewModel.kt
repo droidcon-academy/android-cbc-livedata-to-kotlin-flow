@@ -18,7 +18,7 @@ class MainViewModel(private val passwordRepository: PasswordRepository = Passwor
 
     val password = passwordRepository.password
 
-    val previousPasswords = passwordRepository.history
+    val history = passwordRepository.history
 
     val error = passwordRepository.error
 
