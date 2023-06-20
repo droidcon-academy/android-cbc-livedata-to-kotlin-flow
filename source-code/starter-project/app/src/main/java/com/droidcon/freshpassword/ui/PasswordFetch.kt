@@ -22,13 +22,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.droidcon.freshpassword.UiState
 import com.droidcon.freshpassword.ui.theme.FreshPasswordTheme
 
 @Composable
 fun PasswordFetch(
     modifier: Modifier = Modifier,
-    password: String,
-    previousPasswords: List<String>,
+    uiState: UiState,
     loading: Boolean,
     shareText: (String) -> Unit = {},
     onClick: () -> Unit = {}
@@ -42,11 +42,11 @@ fun PasswordFetch(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     modifier = Modifier.padding(8.dp),
-                    text = password,
+                    text = uiState.password,
                     style = MaterialTheme.typography.displayMedium
                 )
-                if (password.isNotEmpty()) {
-                    Button(onClick = { shareText(password) }) {
+                if (uiState.password.isNotEmpty()) {
+                    Button(onClick = { shareText(uiState.password) }) {
                         Icon(
                             Icons.Rounded.Share,
                             contentDescription = "Share"
@@ -61,7 +61,7 @@ fun PasswordFetch(
             ) {
                 Text("Fresh Password")
             }
-            if (previousPasswords.isNotEmpty()) {
+            if (uiState.history.isNotEmpty()) {
                 Card(
                     modifier = Modifier
                         .padding(8.dp)
@@ -75,8 +75,8 @@ fun PasswordFetch(
                                 style = MaterialTheme.typography.labelSmall
                             )
                         }
-                        items(previousPasswords.size) { i ->
-                            Text(modifier = Modifier.padding(8.dp), text = previousPasswords[i])
+                        items(uiState.history.size) { i ->
+                            Text(modifier = Modifier.padding(8.dp), text = uiState.history[i])
                         }
                     }
                 }
@@ -98,7 +98,7 @@ fun PasswordFetch(
 @Composable
 fun DefaultLoadingPreview() {
     FreshPasswordTheme {
-        PasswordFetch(password = "", previousPasswords = emptyList(), loading = true)
+        PasswordFetch(uiState = UiState(), loading = true)
     }
 }
 
@@ -106,7 +106,7 @@ fun DefaultLoadingPreview() {
 @Composable
 fun DefaultPasswordPreview() {
     FreshPasswordTheme {
-        PasswordFetch(password = "Password123", previousPasswords = emptyList(), loading = false)
+        PasswordFetch(uiState = UiState("Password123", history = emptyList()), loading = false)
     }
 }
 
@@ -115,8 +115,10 @@ fun DefaultPasswordPreview() {
 fun DefaultPasswordWithHistoryPreview() {
     FreshPasswordTheme {
         PasswordFetch(
-            password = "Unicorn",
-            previousPasswords = listOf("Password123", "Password1234", "Password12345"),
+            uiState = UiState(
+                "Unicorn",
+                history = listOf("Password123", "Password1234", "Password12345")
+            ),
             loading = false
         )
     }

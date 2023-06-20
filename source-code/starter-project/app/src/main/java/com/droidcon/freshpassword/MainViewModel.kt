@@ -1,5 +1,6 @@
 package com.droidcon.freshpassword
 
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,12 +17,27 @@ class MainViewModel(private val passwordRepository: PasswordRepository = Passwor
         }
     }
 
-    val password = passwordRepository.password
+    val uiState = MediatorLiveData(UiState())
 
-    val history = passwordRepository.history
+    init {
+        uiState.addSource(passwordRepository.password) { password ->
+            password?.let {
+                uiState.value = uiState.value?.copy(password = it) ?: UiState(password = it)
+            }
+
+        }
+        uiState.addSource(passwordRepository.history) { history ->
+            history?.let {
+                uiState.value = uiState.value?.copy(history = it) ?: UiState(history = it)
+
+            }
+        }
+    }
 
     val error = passwordRepository.error
 
     private val _loading: MutableLiveData<Boolean> = MutableLiveData(false)
     val loading = _loading
 }
+
+data class UiState(val password: String = "", val history: List<String> = emptyList())

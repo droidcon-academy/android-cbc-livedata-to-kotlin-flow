@@ -33,23 +33,24 @@ class MainViewModelTest {
             errorMessage = "Oops!"
         )
         viewModel = MainViewModel(passwordRepository)
+        viewModel.uiState.observeForever { }
     }
 
     @Test
     fun `fetchPassword should set loading and then clear loading`() = runTest {
         assertEquals(false, viewModel.loading.value)
         viewModel.fetchPassword()
-        assertEquals(true, viewModel.loading.value )
+        assertEquals(true, viewModel.loading.value)
         advanceUntilIdle()
-        assertEquals(false, viewModel.loading.value )
+        assertEquals(false, viewModel.loading.value)
     }
 
     @Test
     fun `fetchPassword should fetch the first password`() = runTest {
-        assertEquals("", viewModel.password.value)
+        assertEquals("", viewModel.uiState.value?.password)
         viewModel.fetchPassword()
         advanceUntilIdle()
-        assertEquals("Password123", viewModel.password.value )
+        assertEquals("Password123", viewModel.uiState.value?.password)
     }
 
     @Test
@@ -57,12 +58,12 @@ class MainViewModelTest {
         viewModel.fetchPassword()
         viewModel.fetchPassword()
         advanceUntilIdle()
-        assertEquals("Password1234", viewModel.password.value)
+        assertEquals("Password1234", viewModel.uiState.value?.password)
     }
 
     @Test
     fun `previousPasswords should be the same as history in repository`() = runTest {
-        assertEquals(passwordList, viewModel.history.value)
+        assertEquals(passwordList, viewModel.uiState.value?.history)
     }
 
     @Test
